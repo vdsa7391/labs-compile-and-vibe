@@ -1,12 +1,14 @@
-# Group "GROUP NAME"
+# Group "ONE LONE CODER"
 
 ## Members
-- s123456 LASTNAME FIRSTNAME
-- s123456 LASTNAME FIRSTNAME
-- s123456 LASTNAME FIRSTNAME
+- s337806 RATHORE KHUSHBOO
 
-# Exercise "NAME OF EXERCISE"
+
+# Exercise "MEME GAME"
 
 # Lab Journal
+
+# Lab 1:
+
 
 (you may update this file to keep track of the progress of your group work, throughout the weeks)
