@@ -1,6 +1,6 @@
 
 const meme_collection={};
-const user_collection=[];
+const user_collection={};
 
 // start game:
 
@@ -24,26 +24,59 @@ const startGame= function(username){
 // methods for user
 
 const addUser= function(user){
+    if(user.username in user_collection){
+        console.log("User already exist");
+        return;
+    }
+    else{
+        user_collection[user.username]=user ; 
+        console.log("User succefully added");
+    }
+    
+}
+
+const removeUser = function(username){
+    if(!(username in user_collection)){
+        console.log("User doesn't exist");
+        return;
+    }
+    else{
+        delete user_collection[username]; 
+        console.log("user succefully deleted");
+    }
+
+}
+    
+const getUser = function(username){
+    if(!(username in user_collection)){
+        console.log("User doesn't exist");
+        return;
+    }else{
+        return user_collection[username];
+    }
+
+}
+    
+
+const setUserKey = function(user,oldKey, newkey){
+    if(!(user.username in user_collection)){
+        console.log("User doesn't exist");
+        return;
+    }else{
+        if(user_collection[user.username].getPassword() === oldKey){
+            user_collection[user.username].setPassword(newkey);
+            console.log("passwrod change succefully");
+        }else{
+            console.log("Invalid old password");
+            return;
+        }
         
-}
-
-const removeUser = function(user){
-
-}
-    
-const getUser = function(user){
-
-}
-    
-const setUsername= function(user, username){
-
-}
-
-const setUserKey = function(user, key){
+    }
 
 }
 
 const getUsers= function(){
+    return user_collection;
         
 }
 
@@ -203,16 +236,14 @@ function User(username, password){
     this.meme_collection={};
     this.history=[];
 
+    
+
     // geter and setter
 
     this.getUsername= function(){
         return this.username;
     }
 
-    this.setUsername= function(username){
-        this.username=username;
-        return;
-    }
 
     this.getPassword= function(){
         return this.password;
@@ -283,14 +314,24 @@ addMeme(new Meme("meme6",["meme6","c2","hey","hey","hey","hey","hey"],["s1","s2"
 const user1= new User("khushboo", "123456");
 user1.createMeme("userimage",["cap1","cap2","cap3","cap4","cap5","cap6","cap7"],["s1","s2","s3","s4","s5","s6","s7"]);
 addMeme(meme1);
-addMeme(new Meme("meme7",["meme3","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));// new one 
-addMeme(new Meme("meme8",["meme3","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));// new one 
+/* addMeme(new Meme("meme7",["meme3","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));// new one 
+addMeme(new Meme("meme8",["meme3","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
 addMeme(new Meme("meme9",["mem4","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
 addMeme(new Meme("meme10",["meme5","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
 addMeme(new Meme("meme11",["meme6","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
-
+ */
 //console.log("user meme collection:\n",user1.getUserMemes());
 
 // start a game acording on terms of that a user is present or not
 
-startGame("khushboo");
+//startGame("khushboo");
+
+
+// users methods testing
+
+addUser(user1);
+console.log(getUsers());
+setUserKey(user1,"123456","122");
+console.log(getUsers());
+
+
