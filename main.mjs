@@ -1,17 +1,98 @@
-const getMemeImage= function(collection,meme){
-    return collection.meme_collection[meme.image].image;
+
+const meme_collection={};
+const user_collection=[];
+
+// start game:
+
+const startGame= function(username){
+    let rounds=0;
+    let user;
+    
+    if(username===""){
+        rounds=1;
+        user=null;
+    }else{
+        rounds=3;
+        user= username;
+    }
+    
+    let randomMeme= getRandomElementsFromDict(rounds);
+    console.log("GAME STARTED",randomMeme);
+
 }
 
-const setMemeImage = function(collection, meme, image){
-    if(meme.image in collection.meme_collection){
+// methods for user
+
+const addUser= function(user){
         
-        let oldkey= collection.meme_collection[meme.image].getImage();
-        collection.meme_collection[meme.image].setImage(image);  // Update image using setImage
-        console.log("after update",collection.meme_collection[oldkey]);  // Log updated image
+}
+
+const removeUser = function(user){
+
+}
+    
+const getUser = function(user){
+
+}
+    
+const setUsername= function(user, username){
+
+}
+
+const setUserKey = function(user, key){
+
+}
+
+const getUsers= function(){
         
-        let updatedMeme= collection.meme_collection[oldkey];
-        addMeme(collection,updatedMeme);
-        removeMeme(collection,oldkey);
+}
+
+
+//  methods for meme collection
+
+const getMemes= function(){
+    return meme_collection;
+}
+
+const addMeme= function(meme){
+    if(meme.image in meme_collection){
+        console.log("Meme already exist");
+        return;
+    }
+    else{
+        meme_collection[meme.image]=meme ; 
+        console.log("Meme succefully added");
+    }
+    
+}
+
+const removeMeme= function(image){
+    if(!(image in meme_collection)){
+        console.log("Meme doesn't exist");
+        return;
+    }
+    else{
+        delete meme_collection[image]; 
+        console.log("meme succefully deleted");
+    }
+
+}
+
+
+const getMemeImage= function(meme){
+    return meme_collection[meme.image].getImage();
+}
+
+const setMemeImage = function(meme, image){
+    if(meme.image in meme_collection){
+        
+        let oldkey= meme_collection[meme.image].getImage();
+        meme_collection[meme.image].setImage(image);  // Update image using setImage
+        console.log("after update",meme_collection[oldkey]);  // Log updated image
+        
+        let updatedMeme= meme_collection[oldkey];
+        addMeme(updatedMeme);
+        removeMeme(oldkey);
         console.log("meme image succefully changed"); 
         return;
     }
@@ -22,121 +103,24 @@ const setMemeImage = function(collection, meme, image){
 }
 
 
-//  methods for meme collection
 
-const addMeme= function(collection,meme){
-    if(meme.image in collection.meme_collection){
-        console.log("Meme already exist");
-        return;
-    }
-    else{
-        collection.meme_collection[meme.image]=meme ; 
-        console.log("Meme succefully added");
-    }
+function getRandomElementsFromDict(numberOfElements) {
     
-}
+    const keys = Object.keys(meme_collection);// dictionary into an array of keys conversion
 
-const removeMeme= function(collection,image){
-    if(!(image in collection.meme_collection)){
-        console.log("Meme doesn't exist");
-        return;
-    }
-    else{
-        delete collection.meme_collection[image]; 
-        console.log("meme succefully deleted");
-    }
-
-}
-
-
-function getRandomElementsFromDict(dictionary, numberOfElements) {
-    // Convert the dictionary into an array of keys
-    const keys = Object.keys(dictionary);
-
-    // Shuffle the keys array using Fisher-Yates shuffle
+    // Shuffling
     for (let i = keys.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [keys[i], keys[j]] = [keys[j], keys[i]];  // Swap elements
     }
 
-    // Select the first 'numberOfElements' keys after shuffling
     const selectedKeys = keys.slice(0, numberOfElements);
 
     // Return the selected elements from the dictionary
-    const selectedElements = selectedKeys.map(key => dictionary[key]);
+    const selectedElements = selectedKeys.map(key => meme_collection[key]);
 
     return selectedElements;
 }
-
-
-
-
-function Container(name){
-
-    this.name=name;
-    this.meme_collection={};
-    this.user_collection=[];
-
-    this.getName= function(){
-        return(this.name);
-    }
-
-    
-    this.getMemes= function(){
-        return this.meme_collection;
-
-    }
-
-    this.startGame= function(username){
-        let rounds=0;
-        let user;
-    
-        if(username===""){
-            rounds=1;
-            user=null;
-        }else{
-            rounds=3;
-            user= username;
-        }
-    
-        let randomMeme= getRandomElementsFromDict(this.meme_collection,rounds);
-        console.log("GAME STARTED",randomMeme);
-
-    }
-
-
-    // methods for user
-
-
-    this.addUser= function(user){
-        
-
-    }
-
-    this.removeUser = function(user){
-
-    }
-    
-
-    this.getUser = function(user){
-
-    }
-    
-    this.setUsername= function(user, username){
-
-    }
-
-    this.setUserKey = function(user, key){
-
-    }
-
-    this.getUsers= function(){
-        
-    }
-
-
-}
-
 
 
 function Meme(image, caption_list, score_list ){
@@ -245,7 +229,10 @@ function User(username, password){
 
     this.createMeme= function(image,caption_list,score_list){
         const user_meme= new Meme(image, caption_list,score_list);
-        addMeme(this,user_meme);
+        if(addMeme(user_meme)){
+            this.meme_collection[user_meme.image]= user_meme;
+        };
+        
     }
 
 
@@ -260,8 +247,6 @@ function User(username, password){
 
 
 // game start check
-const game= new Container("first Game");
-console.log(game.getName());
 
 const meme1= new Meme("img1",["cap1","cap2","cap3","cap4","cap5","cap6","cap7"],["s1","s2","s3","s4","s5","s6","s7"]);
 const meme2= new Meme("meme2",["meme2","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]);
@@ -278,12 +263,12 @@ console.log(meme1.getCaptionScoreList()); */
 
 // add, remove, update images of a  meme in meme collection of admin
 
-addMeme(game,meme1);
-addMeme(game,meme2);
-addMeme(game,new Meme("meme3",["meme3","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
-addMeme(game,new Meme("meme4",["mem4","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
-addMeme(game,new Meme("meme5",["meme5","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
-addMeme(game,new Meme("meme6",["meme6","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
+addMeme(meme1);
+addMeme(meme2);
+addMeme(new Meme("meme3",["meme3","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
+addMeme(new Meme("meme4",["mem4","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
+addMeme(new Meme("meme5",["meme5","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
+addMeme(new Meme("meme6",["meme6","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
 
 //console.log(game.getMemes());
 //removeMeme(game,meme1.image);
@@ -297,10 +282,15 @@ addMeme(game,new Meme("meme6",["meme6","c2","hey","hey","hey","hey","hey"],["s1"
 
 const user1= new User("khushboo", "123456");
 user1.createMeme("userimage",["cap1","cap2","cap3","cap4","cap5","cap6","cap7"],["s1","s2","s3","s4","s5","s6","s7"]);
-addMeme(user1,meme1);
-addMeme(user1,meme2);
+addMeme(meme1);
+addMeme(new Meme("meme7",["meme3","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));// new one 
+addMeme(new Meme("meme8",["meme3","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));// new one 
+addMeme(new Meme("meme9",["mem4","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
+addMeme(new Meme("meme10",["meme5","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
+addMeme(new Meme("meme11",["meme6","c2","hey","hey","hey","hey","hey"],["s1","s2","hey","hey","hey","hey","hey",]));
+
 //console.log("user meme collection:\n",user1.getUserMemes());
 
 // start a game acording on terms of that a user is present or not
 
-game.startGame("khushboo");
+startGame("khushboo");
